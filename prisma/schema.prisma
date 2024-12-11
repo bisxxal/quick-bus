@@ -1,0 +1,98 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"  
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
+  firstName String
+  lastName  String 
+  bookings  Booking[]  
+  clerkId String?     
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Bus {
+  id        Int        @id @default(autoincrement())
+  busNumber String     @unique
+  capacity  Int        // Total seats in the bus
+  routeId   Int        // Foreign key linking to the Route model
+  route     Route      @relation(fields: [routeId], references: [id])
+
+  bookings  Booking[]  // A bus can have multiple bookings (many-to-one)
+  
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Route {
+  id         Int        @id @default(autoincrement())
+  startPoint String
+  endPoint   String
+  buses      Bus[]      // One-to-many relation with Bus
+
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+}
+
+model Booking {
+  id          Int        @id @default(autoincrement())
+  userId      Int        // Foreign key to User
+  busId       Int        // Foreign key to Bus
+  bookingDate DateTime   // The date and time the booking was made
+  status      BookingStatus // Status of the booking (e.g., 'confirmed', 'cancelled')
+  seatsBooked Int        // Number of seats booked
+
+  user        User       @relation(fields: [userId], references: [id])
+  bus         Bus        @relation(fields: [busId], references: [id])
+  ticket      Ticket?    // One-to-one relation with Ticket (optional)
+  payment     Payment?   // One-to-one relation with Payment (optional)
+
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Ticket {
+  id         Int        @id @default(autoincrement())
+  bookingId  Int         @unique
+  ticketCode String     @unique
+  seatNumber String   
+  price      Float 
+
+  booking    Booking    @relation(fields: [bookingId], references: [id])
+
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+}
+
+model Payment {
+  id          Int        @id @default(autoincrement())
+  bookingId   Int        @unique
+  paymentDate DateTime   
+  amount      Float      
+  paymentMethod String   
+  status      PaymentStatus 
+  booking     Booking    @relation(fields: [bookingId], references: [id])
+
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+enum BookingStatus {
+  CONFIRMED
+  CANCELLED
+  PENDING
+}
+
+enum PaymentStatus {
+  PAID
+  FAILED
+  PENDING
+}
