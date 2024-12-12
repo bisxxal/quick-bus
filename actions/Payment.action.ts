@@ -10,9 +10,11 @@ import { getUser } from "./user.actions";
 
 export async function Createpaymet({ amount }:any) { 
      
+  console.log('amount', amount);
+  
     try {
       const options = {
-        amount: amount ,  
+        amount: amount*100 ,  
         currency: 'INR',
         receipt: `receipt_order_${new Date().getTime()}`,
       };
@@ -53,24 +55,17 @@ const isAuthentic = expectedSignature === razorpay_signature;
  if (isAuthentic) {
     console.log('payment verified');
      
-    const user = await getUser() 
-//  if (user) {
+    const user = await getUser()  
     const payis =  await prisma.payment.create({
         data: {
           amount,  
-          status:'PAID',
-          // user:{
-          //   connect:{
-          //     id: user.id
-          //   }
-          // },
+          status:'PAID', 
           userId: user.id,
           razorpay_order_id,
           razorpay_payment_id,
         },
       }); 
-      console.log('payis', payis);    
-// }
+      // console.log('payis', payis); 
   return JSON.parse(JSON.stringify({ status: 200 ,paymentId: payis.id })); 
 } 
 else {

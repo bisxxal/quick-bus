@@ -1,12 +1,13 @@
+'use client';
 import { bookSeat } from '@/actions/booking.actions';
 import { Createpaymet, verifyPayment } from '@/actions/Payment.action';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react'
 
 const BookingPage = ({busDetails ,user  }:any) => {
-
+ 
     const [selectedSeats, setSelectedSeats] = useState<Set<number>>(new Set());
-    const [paymentid , setPaymentId] = useState<number|null>(null)
+ 
       const router = useRouter();
       const p = useParams()
     
@@ -23,9 +24,7 @@ const BookingPage = ({busDetails ,user  }:any) => {
           }
           return newSelectedSeats;
         });
-      };
-
-
+      }; 
         const handlePayment = async (amount: number) => {
           try {
            
@@ -51,21 +50,17 @@ const BookingPage = ({busDetails ,user  }:any) => {
                 
                 const data = await verifyPayment({ razorpay_order_id, razorpay_payment_id, razorpay_signature , amount});
       
+                console.log('Payment verification:', data);
+                
                 if (data.status === 200 ) {
-                  // Handle successful payment here
-                  console.log('Payment successful');
-                  // Redirect to booking confirmation or ticket page
-                  router.push(`/ticket/${data.bookingId}`);
-                  setPaymentId(data.paymentId)
-      
-                  return data.paymetId
+                    bookTIcket(data.paymentId)  
                 } else {
                   alert('Payment verification failed');
                 }
               },
               prefill: {
-                name: 'John Doe', // Add user's name dynamically
-                email: 'user@example.com', // Add user's email dynamically
+                name: `${user?.firstName} ${user?.lastName}` , 
+                email: user?.email,
               },
               theme: {
                 color: '#528FF0',
@@ -85,8 +80,15 @@ const BookingPage = ({busDetails ,user  }:any) => {
           const selectedSeatIds = Array.from(selectedSeats);
       
           const amount = busDetails.bus.price * selectedSeats.size;
-          // handlePayment(amount); 
-          if(paymentid){
+           handlePayment(amount); 
+ 
+        };
+
+
+        const bookTIcket = async (paymentid:number) => {
+
+            if (!busDetails || selectedSeats.size === 0) return; 
+          const selectedSeatIds = Array.from(selectedSeats); 
             const result = await bookSeat({
               userId:1,  
              busId: id,
@@ -94,13 +96,8 @@ const BookingPage = ({busDetails ,user  }:any) => {
               paymentId: paymentid!,
          })
          console.log("booked in client",result);
-         router.push(`/ticket/${result?.booking.id}`);
-          }
-      
-          // router.refresh()
-            
-        };
-
+         router.push(`/success/${result?.booking.id}`); 
+        }
 
   return (
     <div className="container mx-auto p-4">
@@ -108,11 +105,11 @@ const BookingPage = ({busDetails ,user  }:any) => {
     {/* <p>Total Seats: {busDetails.seats.length}</p> */}
 
     <div className="grid grid-cols-5 gap-2 mt-4">
-      {busDetails.availableSeats?.map((seat:any) => (
+      {busDetails?.availableSeats?.map((seat:any) => (
         <button
           key={seat.id}
           onClick={() => !seat.isBooked && handleSeatClick(seat.id)}
-          disabled={seat.isBooked}
+          disabled={seat?.isBooked}
           className={`p-2 rounded ${
             seat.isBooked
               ? 'bg-gray-400 cursor-not-allowed'
@@ -121,7 +118,7 @@ const BookingPage = ({busDetails ,user  }:any) => {
               : 'bg-green-500'
           }`}
         >
-          {seat.seatNumber}
+          {seat?.seatNumber}
         </button>
       ))}
     </div>

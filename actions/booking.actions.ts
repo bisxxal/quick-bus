@@ -1,5 +1,6 @@
 'use server'
 import prisma from "@/lib/prisma";
+import { handelError } from "@/lib/utils/error";
 import { currentUser } from "@clerk/nextjs/server";
 import { BookingStatus } from "@prisma/client";
   
@@ -278,10 +279,13 @@ export const getBooking = async (bookingId: number) => {
                         },
                         seats:{
                           where:{
+                            
                             isBooked: true,
                             bookingId: bookingId
                           },
                             select:{
+                              id  : true,
+                              isBooked: true, 
                                 seatNumber: true,
                                 bookingId: true,  
                             }
@@ -292,7 +296,7 @@ export const getBooking = async (bookingId: number) => {
             }
         });
         return booking;
-    } catch (error) {
-        // console.log(error);
+    } catch (error) { 
+      handelError(error, 'getBooking');
     }
 }       
