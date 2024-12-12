@@ -6,15 +6,14 @@ datasource db {
   provider = "postgresql"  
   url      = env("DATABASE_URL")
 }
-
 model User {
   id        Int        @id @default(autoincrement())
   email     String     @unique
   firstName String
   lastName  String 
   bookings  Booking[]  
-  clerkId String?     
-
+  clerkId   String?     
+  payments  Payment[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
 }
@@ -22,14 +21,16 @@ model User {
 model Bus {
   id        Int        @id @default(autoincrement())
   busNumber String     @unique
-  capacity  Int         // Total number of seats
+  capacity  Int         
   routeId   Int        
   route     Route      @relation(fields: [routeId], references: [id])
 
-  bookings  Booking[]   
+  seats     Seat[]     // A bus has many seats
+  bookings  Booking[]  
   
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
+  price     Float
 }
 
 model Route {
@@ -52,37 +53,47 @@ model Booking {
   
   user        User       @relation(fields: [userId], references: [id])
   bus         Bus        @relation(fields: [busId], references: [id])
-  ticket      Ticket?    
-  payment     Payment?   
+  // ticket      Ticket?    
+  paymentId  Int?
+  payment    Payment?   @relation(fields: [paymentId], references: [id]) 
+  
+  ticketCode String?
+  seatNumber Seat[]  
 
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 }
-
-model Ticket {
-  id         Int        @id @default(autoincrement())
-  bookingId  Int         @unique
-  ticketCode String     @unique
-  seatNumber String   
-  price      Float 
-
-  booking    Booking    @relation(fields: [bookingId], references: [id])
-
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-}
-
+  
 model Payment {
   id          Int        @id @default(autoincrement())
-  bookingId   Int        @unique
-  paymentDate DateTime   
-  amount      Float      
-  paymentMethod String   
-  status      PaymentStatus 
-  booking     Booking    @relation(fields: [bookingId], references: [id])
+  userId      Int
+  user        User?       @relation(fields: [userId], references: [id])
 
+  // bookingId   Int        @unique
+  paymentDate DateTime   @default(now())
+  amount      Float       
+  status      PaymentStatus
+  // booking     Booking?    @relation(fields: [bookingId], references: [id])
+
+  booking     Booking[]
+  razorpay_order_id String
+  razorpay_payment_id String
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
+}
+ 
+model Seat {
+  id        Int    @id @default(autoincrement())
+  seatNumber String  
+  busId     Int
+  bus       Bus    @relation(fields: [busId], references: [id])
+  isBooked  Boolean @default(false) 
+
+  bookingId Int?
+  Booking  Booking? @relation(fields: [bookingId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum BookingStatus {
@@ -96,106 +107,3 @@ enum PaymentStatus {
   FAILED
   PENDING
 }
-
-// model User {
-//   id        Int        @id @default(autoincrement())
-//   email     String     @unique
-//   firstName String
-//   lastName  String 
-//   bookings  Booking[]  
-//   clerkId   String?     
-
-//   createdAt DateTime   @default(now())
-//   updatedAt DateTime   @updatedAt
-// }
-
-// model Bus {
-//   id        Int        @id @default(autoincrement())
-//   busNumber String     @unique
-//   capacity  Int         // Total number of seats
-//   routeId   Int        
-//   route     Route      @relation(fields: [routeId], references: [id])
-
-//   seats     Seat[]     // A bus has many seats
-//   bookings  Booking[]  
-  
-//   createdAt DateTime   @default(now())
-//   updatedAt DateTime   @updatedAt
-// }
-
-// model Route {
-//   id         Int        @id @default(autoincrement())
-//   startPoint String
-//   endPoint   String
-//   buses      Bus[] 
-
-//   createdAt  DateTime   @default(now())
-//   updatedAt  DateTime   @updatedAt
-// }
-
-// model Booking {
-//   id          Int        @id @default(autoincrement())
-//   userId      Int         
-//   busId       Int         
-//   bookingDate DateTime    
-//   status      BookingStatus  
-//   seatsBooked Int         
-  
-//   user        User       @relation(fields: [userId], references: [id])
-//   bus         Bus        @relation(fields: [busId], references: [id])
-//   ticket      Ticket?    
-//   payment     Payment?   
-
-//   createdAt   DateTime   @default(now())
-//   updatedAt   DateTime   @updatedAt
-// }
-
-// model Ticket {
-//   id         Int        @id @default(autoincrement())
-//   bookingId  Int         @unique
-//   ticketCode String     @unique
-//   seatNumber String   
-//   price      Float 
-
-//   booking    Booking    @relation(fields: [bookingId], references: [id])
-
-//   createdAt  DateTime   @default(now())
-//   updatedAt  DateTime   @updatedAt
-// }
-
-// model Payment {
-//   id          Int        @id @default(autoincrement())
-//   bookingId   Int        @unique
-//   paymentDate DateTime   
-//   amount      Float      
-//   paymentMethod String   
-//   status      PaymentStatus 
-//   booking     Booking    @relation(fields: [bookingId], references: [id])
-
-//   createdAt   DateTime   @default(now())
-//   updatedAt   DateTime   @updatedAt
-// }
-
-// // New Seat model to store seat-specific details
-// model Seat {
-//   id        Int    @id @default(autoincrement())
-//   seatNumber String @unique // Unique seat number (e.g., A1, A2, etc.)
-//   busId     Int
-//   bus       Bus    @relation(fields: [busId], references: [id])
-//   isBooked  Boolean @default(false) // Seat availability (booked or not)
-
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-// }
-
-// enum BookingStatus {
-//   CONFIRMED
-//   CANCELLED
-//   PENDING
-// }
-
-// enum PaymentStatus {
-//   PAID
-//   FAILED
-//   PENDING
-// }

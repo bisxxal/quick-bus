@@ -1,6 +1,7 @@
 'use server';
 
 import prisma from "@/lib/prisma";
+import { currentUser } from "@clerk/nextjs/server";
 
 export const createUser = async (user:any) => {  
     try {
@@ -21,3 +22,26 @@ export const createUser = async (user:any) => {
     }
   }
  
+  export const getUser = async () => {
+ 
+    try {
+      const use = await currentUser()
+  
+      const user = await prisma.user.findUnique({
+        where:{
+          id:Number(use?.publicMetadata.userId)
+        },
+        select:{
+          id:true,
+          email:true,
+          firstName:true,
+          lastName:true,
+        }
+      })
+      return JSON.parse(JSON.stringify(user))
+      
+    } catch (error) {
+      // console.log('error when fetching user' , error);
+      return JSON.parse(JSON.stringify('error when fetching user' ))
+    }
+  } 
