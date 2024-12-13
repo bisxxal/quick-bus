@@ -1,6 +1,7 @@
 'use server';
 
 import prisma from "@/lib/prisma";
+import { handelError } from "@/lib/utils/error";
 import { currentUser } from "@clerk/nextjs/server";
 
 export const createUser = async (user:any) => {  
@@ -17,8 +18,7 @@ export const createUser = async (user:any) => {
       
       return JSON.parse(JSON.stringify(newUser))
     } catch (error) {
-      // console.log('error when creating user' , error);
-      // return JSON.parse(JSON.stringify('error when creating user' ))
+      handelError (error , 'error when creating user')
     }
   }
  
@@ -41,7 +41,8 @@ export const createUser = async (user:any) => {
       return JSON.parse(JSON.stringify(user))
       
     } catch (error) {
-      // console.log('error when fetching user' , error);
-      return JSON.parse(JSON.stringify('error when fetching user' ))
+      handelError (error , 'error when getting user')
     }
   } 
+
+ 

@@ -34,8 +34,8 @@ export const SearchBuses = async (to: string, from: string, date: Date) => {
                 buses: {
                     some: {
                         updatedAt: {
-                            gte: startOfDay,  // Greater than or equal to start of the day
-                            lte: endOfDay     // Less than or equal to end of the day
+                            gte: startOfDay,  
+                            lte: endOfDay     
                         }
                     }
                 }
@@ -46,14 +46,18 @@ export const SearchBuses = async (to: string, from: string, date: Date) => {
                         id: true,
                         busNumber: true,
                         capacity: true,
+                        startingTime: true,
+                        endingTime: true,
+                        price: true,
                     }
                 }
             }
         });
 
-        return JSON.parse(JSON.stringify(bus));
+        return JSON.parse(JSON.stringify({bus}));
     } catch (error) {
-        console.log(error);
+        
+        handelError(error, 'SearchBuses');    
     }
 }
 ////------------============

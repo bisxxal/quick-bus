@@ -3,9 +3,9 @@
 import Razorpay from "razorpay"; 
 import crypto from "crypto"; 
 import { razorpayInstance } from "@/lib/utils/razorpay";
-import prisma from "@/lib/prisma";
-import { currentUser } from "@clerk/nextjs/server";
+import prisma from "@/lib/prisma"; 
 import { getUser } from "./user.actions";
+import { handelError } from "@/lib/utils/error";
 
 
 export async function Createpaymet({ amount }:any) { 
@@ -27,9 +27,7 @@ export async function Createpaymet({ amount }:any) {
       return JSON.parse(JSON.stringify(order)); 
 
     } catch (error) { 
-        console.log('error', error);
-        
-      return JSON.parse(JSON.stringify({ error: 'Failed to create order' , status:500 } )); 
+        handelError(error , 'Create paymet');
     }
   }
  
@@ -72,11 +70,13 @@ else {
   return JSON.parse(JSON.stringify({ status: 404 }));   
 }
 } catch (error) { 
-    if (error instanceof Error) {
-        console.log('Error booking seats:', error.message);
-        console.log('Stack trace:', error.stack);
-      } else {
-        console.log('Unexpected error:', error); 
-      } 
+    // if (error instanceof Error) {
+    //     console.log('Error booking seats:', error.message);
+    //     console.log('Stack trace:', error.stack);
+    //   } else {
+    //     console.log('Unexpected error:', error); 
+    //   } 
+
+    handelError(error , 'verifyPayment');
 }
 }

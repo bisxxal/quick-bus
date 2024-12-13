@@ -26,7 +26,7 @@ const TicketBar = ({fetchDir}:any) => {
         }
       </select>
 
-      <input required className=' text-black' type="date" name="date" id="" />
+      <input required defaultValue={Date.now()} className=' text-black' type="date" name="date" id="" />
 
       <button type="submit">Search</button>
    
