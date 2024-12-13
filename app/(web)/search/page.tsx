@@ -1,6 +1,6 @@
 'use client'
 import { SearchBuses } from '@/actions/booking.actions'
-import { redirect, useParams, usePathname, useSearchParams } from 'next/navigation'
+import { redirect, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 const SearchPage = () => {
@@ -16,6 +16,7 @@ const [buses, setBuses] = useState([])
     useEffect(()=>{
         featchBusses()
     } , [path])
+
     const featchBusses = async () => {  
          const bus = await SearchBuses(to, form, date) 
       setBuses(bus.bus); 
@@ -24,8 +25,7 @@ const [buses, setBuses] = useState([])
       const handelClicked = (id:string) => {
         redirect(`/bus/${id}`)
       }
-    // console.log(buses);
-    
+   
   return (
     <div className=' flex items-center gap-5 flex-col'>
       <h1 className='text-2xl font-semibold'>Search Result</h1>

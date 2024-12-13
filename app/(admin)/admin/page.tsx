@@ -1,6 +1,4 @@
-import BusAdding from '@/components/custom/busAdding'
-import BusSearch from '@/components/custom/BusSearch'
-import SeatAdd from '@/components/custom/SeatAdd'
+import BusAdding from '@/components/custom/busAdding' 
 import React from 'react'
 
 const AdminPage = () => {
