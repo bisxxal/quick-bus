@@ -38,6 +38,10 @@ export const createUser = async (user:any) => {
           lastName:true,
         }
       })
+
+      if (!user) {
+        return null    
+      }
       return JSON.parse(JSON.stringify(user))
       
     } catch (error) {

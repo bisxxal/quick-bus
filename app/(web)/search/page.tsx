@@ -28,6 +28,8 @@ const [buses, setBuses] = useState([])
     
   return (
     <div className=' flex items-center gap-5 flex-col'>
+      <h1 className='text-2xl font-semibold'>Search Result</h1>
+      <p>{buses.length} bus found</p>
           {
             buses?.map((bus:any) => {
               console.log("bussed",bus);

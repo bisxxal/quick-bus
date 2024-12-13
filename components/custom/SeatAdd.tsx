@@ -62,7 +62,7 @@ const SeatAdd = ({busId , seats}:{busId:number,seats?:any}) => {
       </button>
       </div>
 
-      <button disabled={!busId} type="submit" className="bg-blue-500 p-4">Submit</button>
+      <button disabled={!busId} type="submit" className="bg-blue-500 rounded-2xl w-32 p-4">Submit</button>
       
     </form>
   );

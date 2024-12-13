@@ -5,6 +5,29 @@
 body {
   @apply bg-black text-white
 }
+.mirror{
+   
+  -webkit-transform: matrix(-1, 0, 0, 1, 0, 0);
+  -moz-transform: matrix(-1, 0, 0, 1, 0, 0);
+  -o-transform: matrix(-1, 0, 0, 1, 0, 0);
+  transform: matrix(-1, 0, 0, 1, 0, 0);
+}
+
+/* Add gap after every 12th seat (every row of 12 seats) */
+.grid1 > button:nth-child(12n) {
+  margin-right: 10px; /* Add right margin for every 12th seat */
+}
+
+/* Optionally add space between rows */
+.grid1 {
+  grid-template-columns: repeat(5, 1fr); /* 5 columns */
+  grid-gap: 10px; /* Controls space between columns and rows */
+}
+
+.grid1 > button:nth-child(12n) {
+  margin-right: 20px; /* Adjust this for more noticeable gaps between rows */
+}
+
 
 @layer base {
   :root {

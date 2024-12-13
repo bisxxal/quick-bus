@@ -53,11 +53,9 @@ model Booking {
   busId       Int         
   bookingDate DateTime    
   status      BookingStatus  
-  seatsBooked Int         
-  
+  seatsBooked Int
   user        User       @relation(fields: [userId], references: [id] ,onDelete: Cascade)
   bus         Bus        @relation(fields: [busId], references: [id] ,onDelete: Cascade)
-  // ticket      Ticket?    
   paymentId  Int?
   payment    Payment?   @relation(fields: [paymentId], references: [id] ,onDelete: Cascade)
   
