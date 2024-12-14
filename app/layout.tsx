@@ -4,6 +4,7 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import Script from "next/script";
 import  { Toaster } from 'react-hot-toast';
+import Navbar from "@/components/custom/Navbar";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -31,7 +32,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
          <Toaster />
+         <Navbar/>
+         <div className=" mt-[74px]">
         {children}
+         </div>
       </body>
         <Script src="https://checkout.razorpay.com/v1/checkout.js" />
     </html>

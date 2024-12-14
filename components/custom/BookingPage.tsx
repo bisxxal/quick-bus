@@ -88,14 +88,31 @@ const BookingPage = ({busDetails ,user}:any) => {
       }, 100); 
     }
   return (
-    <div className="container relative mx-auto p-4 ">
+    <div className=" relative mx-auto max-md:w-full w-5/6 p-4 ">
 
     { loading && <div className=' absolute bg-[#00000054] backdrop-blur-lg flex flex-col gap-2 items-center justify-center h-screen z-10 right-0 top-0 w-full'>
         <p>Booking seat</p>
         <p className=' text-gray-500 -mt-2 '>Dont press any button or go back </p>
       <FiLoader className=" text-2xl animate-spin" /> 
       </div>}
-    <h1 className="text-2xl font-bold">Bus Seat Booking</h1>
+
+      <div className=' flex items-center justify-between'>  
+    <h1 className=" text-gray-400">Click on an Available seat to proceed with your transaction.</h1>
+
+    <div className='text-sm gap-6 flex items-center'>
+      <div>
+      <label>Available</label>
+      <p className='bg-[#3cf23c5a] border-[#00ff0087] border w-20 h-14 !rounded-xl'></p>
+      </div>
+
+      <div>
+          <label>Unavailable</label>
+          <p className='  w-20 h-14 !rounded-xl bg-[#313131]'>
+          </p>
+      </div>
+
+      </div>
+    </div>
   
     <div className="grid grid-cols-5 p-3 rounded-xl border-2 border-[#ffffff47] gap-2 mt-4">
       {busDetails?.availableSeats?.map((seat:any) => (
@@ -103,12 +120,12 @@ const BookingPage = ({busDetails ,user}:any) => {
           key={seat.id}
           onClick={() => !seat.isBooked && handleSeatClick(seat.id)}
           disabled={seat?.isBooked}
-          className={` w-20 h-14 rounded-xl ${
+          className={` w-20 h-14 !rounded-xl ${
             seat.isBooked
-              ? 'bg-gray-400 cursor-not-allowed'
+              ? 'bg-[#313131] cursor-not-allowed'
               : selectedSeats.has(seat.id)
-              ? 'bg-red-500'
-              : 'bg-green-500'
+              ? ' buttonbg'
+              : 'bg-[#3cf23c60] border-[#00ff0087] border'
           }  group flex items-center justify-center`}
         >
          <GiCarSeat className='  text-2xl  mirror' />
@@ -116,7 +133,21 @@ const BookingPage = ({busDetails ,user}:any) => {
         </button>
       ))}
     </div>
-    <button onClick={handleSubmit} className="mt-4 p-2 bg-blue-500 text-white rounded">Confirm Booking</button>
+    {
+      selectedSeats.size > 0 && (
+
+        <div className=' flex justify-between max-md:flex-col max-md:items-start max-md:gap-7 items-center mt-4'>
+          <div>
+        <p className=' text-lg text-gray-400'>Total seat {Array.from(selectedSeats).length}</p>
+        <p className='my-4 font-extrabold text-2xl '>Selected Seats - <span className=' textbase'>{Array.from(selectedSeats).join(', ')}</span> </p>
+        <p className='my-4 font-extrabold text-3xl '>Total Amount -  ₹ { busDetails.bus.price * selectedSeats.size } </p>
+          </div>
+        <button onClick={handleSubmit} className="  p-4 px-6 bg-gradient-to-r from-indigo-500 text-white via-purple-500 to-pink-500 text-xl font-extrabold rounded-full ">
+     Confirm Booking</button>
+        </div>
+       )
+    }
+ 
   
   </div>
   )

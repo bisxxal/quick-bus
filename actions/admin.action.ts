@@ -1,6 +1,9 @@
 'use server'
 import prisma from "@/lib/prisma";
 import { handelError } from "@/lib/utils/error"; 
+import { revalidatePath } from 'next/cache';
+import { redirect } from "next/navigation";
+import { NextResponse } from "next/server";
 
 export const addBus = async (busName:string , busNumber: string, capacity: number ,  startingTime:Date ,endingTime:Date , price:number , startPoint:string , endPoint:string) => {
     try {
@@ -25,12 +28,11 @@ export const addBus = async (busName:string , busNumber: string, capacity: numbe
     } catch (error) { 
         handelError(error , "addBus Error");
     }
-
 }
 
 export const UpdateBus = async ( busId:number, routeId:number , busNumber: string,busName:string, capacity: number ,  startingTime:Date ,endingTime:Date , price:number , startPoint:string , endPoint:string) => {
     try {
-        const bus = await prisma.bus.update({
+          await prisma.bus.update({
             where: {
                 id: busId,
                 routeId:routeId
@@ -96,7 +98,7 @@ export const featchBus = async (busId: number) => {
 export async function seatCreate(seatnames: string[], busId: number) {
     try {
       
-      const createdSeats = await prisma.seat.createMany({
+      await prisma.seat.createMany({
         data: seatnames.map((seatName: string) => ({
           seatNumber: seatName,
           busId: busId,
@@ -107,3 +109,22 @@ export async function seatCreate(seatnames: string[], busId: number) {
       handelError (error , 'error when creating seat')
     }
   }
+
+export const SearchBus = async (busname:string) => {
+    try {
+        const bus = await prisma.bus.findMany({
+            where: {
+                busName: {
+                    contains: busname
+                }
+            },
+            select:{
+                id:true,
+            }
+        }); 
+        return JSON.parse(JSON.stringify({bus:bus[0].id}));
+         
+    } catch (error) {
+        handelError(error , "SearchBus Error");
+    }
+}

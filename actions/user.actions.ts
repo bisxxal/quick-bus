@@ -47,6 +47,44 @@ export const createUser = async (user:any) => {
     } catch (error) {
       handelError (error , 'error when getting user')
     }
-  } 
+  }
 
- 
+export const profileBooking = async () => { 
+  try {
+    const user = await getUser();
+
+    const bookings = await prisma.booking.findMany({
+      where:{
+        userId:user.id
+      },
+      select:{
+        id:true,
+        busId:true,
+        userId:true,
+        bookingDate:true,
+        seatsBooked:true,
+        seatNumber:{
+          select:{
+            seatNumber:true
+          }
+        },
+        createdAt:true,
+        bus:{
+          select:{
+            busName:true,
+            busNumber:true,
+            route:{
+              select:{
+                startPoint:true,
+                endPoint:true,
+              }
+            }
+          }
+        }
+      }
+    })
+    return JSON.parse(JSON.stringify(bookings))
+  } catch (error) {
+    handelError (error , 'error when getting user')
+  }
+}

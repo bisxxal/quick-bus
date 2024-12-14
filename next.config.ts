@@ -8,24 +8,19 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   experimental: {
-    serverActions: {
-      bodySizeLimit: "100MB",
-    },
   },
+  
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "cdn.pixabay.com",
+        hostname: "plus.unsplash.com",
       },
       {
         protocol: "https",
-        hostname: "img.freepik.com",
+        hostname: "images.unsplash.com",
       },
-      {
-        protocol: "https",
-        hostname: "cloud.appwrite.io",
-      },
+       
     ],
   },
 };

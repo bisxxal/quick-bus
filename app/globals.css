@@ -12,23 +12,16 @@ body {
   -o-transform: matrix(-1, 0, 0, 1, 0, 0);
   transform: matrix(-1, 0, 0, 1, 0, 0);
 }
-
-/* Add gap after every 12th seat (every row of 12 seats) */
-.grid1 > button:nth-child(12n) {
-  margin-right: 10px; /* Add right margin for every 12th seat */
+ 
+.base{
+  background-color: #3352cc;
 }
-
-/* Optionally add space between rows */
-.grid1 {
-  grid-template-columns: repeat(5, 1fr); /* 5 columns */
-  grid-gap: 10px; /* Controls space between columns and rows */
+.textbase{
+  color: #3352cc;
 }
-
-.grid1 > button:nth-child(12n) {
-  margin-right: 20px; /* Adjust this for more noticeable gaps between rows */
+.buttonbg{
+  @apply bg-gradient-to-br text-white rounded-full   from-[#3352CC] font-medium to-[#1C2D70];
 }
-
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -92,4 +85,15 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.cl-internal-1p733cp{
+  @apply bg-gradient-to-br text-white   from-[#3352CC] font-medium to-[#1C2D70];
+}
+.cl-internal-4x6jej{
+  display: none !important;
+  @apply bg-gradient-to-r from-indigo-500 !text-white via-purple-500 to-pink-500 
+}
+.cl-internal-1tpvhd8 , .cl-internal-1vbkfwh ,.cl-internal-1c7fjmu,.cl-internal-15di0mo{
+  color: white !important;
 }

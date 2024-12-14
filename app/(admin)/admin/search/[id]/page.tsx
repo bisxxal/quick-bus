@@ -8,7 +8,8 @@ const page = async( {params}:any) => {
     const bus  = await featchBus(Number(id));
     
   return (
-    <div>
+    <div className=' w-full h-screen mt-20 flex-col flex items-center justify-center'>
+  <h1>Update Bus Details</h1>
       <BusAdding type='update' bus={bus} />
     </div>
   )

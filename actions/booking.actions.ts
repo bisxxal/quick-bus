@@ -1,26 +1,34 @@
 'use server'
 import prisma from "@/lib/prisma";
-import { handelError } from "@/lib/utils/error";
-import { currentUser } from "@clerk/nextjs/server";
-import { BookingStatus } from "@prisma/client";
-import { getUser } from "./user.actions";
-  
+import { handelError } from "@/lib/utils/error"; 
+import { getUser } from "./user.actions"; 
+
 export const fetchDirection = async () => {
-    try {
-        const dir = await prisma.route.findMany({
-            select: {
-                id: true,
-                startPoint: true,
-                endPoint:true, 
-            }
-        })
-        // console.log(dir);
-        
-        return JSON.parse(JSON.stringify(dir))
-    } catch (error) {
-        console.log(error)
-    }
-}     
+  try { 
+      const dir = await prisma.route.findMany({
+          select: {
+              id: true,
+              startPoint: true,
+              endPoint: true, 
+          }
+      });
+      const uniquePoints = new Set();
+      const uniqueRoutes = dir.filter(route => {
+          const pointsKey = `${route.startPoint}-${route.endPoint}`;
+
+          if (!uniquePoints.has(pointsKey)) {
+              uniquePoints.add(pointsKey);
+              return true;  
+          }
+          return false;   
+      });
+      return JSON.parse(JSON.stringify(uniqueRoutes));
+  } catch (error) {
+      handelError(error, 'fetchDirection');
+  }
+};
+
+
 export const SearchBuses = async (to: string, from: string, date: Date) => {
     try { 
         const startOfDay = new Date(date);
@@ -50,6 +58,15 @@ export const SearchBuses = async (to: string, from: string, date: Date) => {
                         startingTime: true,
                         endingTime: true,
                         price: true,
+                        busName : true,
+                        seats:{
+                            where:{
+                                isBooked: false
+                            },
+                            select:{ 
+                                isBooked: true,
+                            }
+                        }
                     }
                 }
             }
@@ -57,8 +74,7 @@ export const SearchBuses = async (to: string, from: string, date: Date) => {
 
         return JSON.parse(JSON.stringify({bus}));
     } catch (error) {
-        
-        handelError(error, 'SearchBuses');    
+      handelError(error, 'SearchBuses');    
     }
 }
 
@@ -76,17 +92,14 @@ export async function getBusDetails(busId: number) {
         throw new Error('Bus not found');
       }
    
-      // const availableSeats = bus.seats.filter(seat => seat);
       const availableSeats = bus.seats
-      .filter(seat => seat && seat.seatNumber) // Filter valid seats with a seat number
+      .filter(seat => seat && seat.seatNumber) 
       .map(seat => ({
         id: seat.id,
-        seatNumber: seat.seatNumber,  // Retain seat number
-        isBooked: seat.isBooked,      // Include booking status
+        seatNumber: seat.seatNumber,  
+        isBooked: seat.isBooked,      
       }))
-      .sort((a, b) => a.seatNumber.localeCompare(b.seatNumber));  // Sort by seatNumber alphabetically
-
-
+      .sort((a, b) => a.seatNumber.localeCompare(b.seatNumber)); 
       return {
         bus,
         availableSeats,
@@ -96,33 +109,8 @@ export async function getBusDetails(busId: number) {
     
     }
   } 
-export async function bookSeat({
-  userId,
-  busId,
-  seatIds,
-  paymentId,
-}: {
-  userId: number;
-  busId: number;
-  seatIds: number[];
-  paymentId: number;
-}) {
-  try {
-    // Step 1: Fetch available seats that are not booked yet
-    // const seats = await prisma.seat.findMany({
-    //   where: {
-    //     id: { in: seatIds },
-    //     busId: busId,  // Ensure the seats belong to the given bus
-    //     isBooked: false,  // Only get unbooked seats
-    //   },
-    // });
-
-    // // Step 2: Check if all selected seats are available
-    // if (seats.length !== seatIds.length) {
-    //   console.log('Some selected seats are already booked or invalid.');
-    //   throw new Error('One or more seats are already booked or invalid.');
-    // }
- 
+export async function bookSeat({userId,busId,seatIds,paymentId,}: {userId: number;busId: number;seatIds: number[];paymentId: number;}) {
+  try { 
     const booking = await prisma.booking.create({
       data: {
         userId: userId,
@@ -133,28 +121,22 @@ export async function bookSeat({
         paymentId
       },
     });
-
-    // Step 4: Mark the selected seats as booked and associate them with the booking
+ 
     await prisma.seat.updateMany({
       where: {
         id: { in: seatIds },
       },
       data: {
         isBooked: true,
-        bookingId: booking.id,  // Associate the seats with the booking
+        bookingId: booking.id,  
       },
     });
-
-    // Step 5: Return the booking details along with the seat numbers
+ 
     const updatedSeats = await prisma.seat.findMany({
       where: {
         id: { in: seatIds },
       },
-    });
-
-    console.log('Booking result:', { seats: updatedSeats });
-
-    // Return booking and associated seat details
+    }); 
     return {
       booking,
       seats: updatedSeats.map((seat) => ({
@@ -164,19 +146,12 @@ export async function bookSeat({
         isBooked: seat.isBooked,
       })),
     };
-  } catch (error) {
-    // Enhanced error handling
-    if (error instanceof Error) {
-      console.log('Error booking seats:', error.message);
-      console.log('Stack trace:', error.stack);
-    } else {
-      console.log('Unexpected error:', error);   
-    } 
+  } catch (error) { 
+    handelError(error, 'bookSeat');
   }
 }
 
 export const getBooking = async (bookingId: number) => {
-
   const user = await getUser();
     try {
       if (!user) { return null; }   
@@ -210,7 +185,6 @@ export const getBooking = async (bookingId: number) => {
                     }
                 }
             },
-          
             user: true, 
         }
     });

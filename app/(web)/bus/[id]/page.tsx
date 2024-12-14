@@ -10,7 +10,7 @@ const page = async( {params}:any) => {
   const busDetails = await getBusDetails(Number(id));
   
   return (
-    <div>
+    <div className=' w-full '>
        <BookingPage user={user} busDetails={busDetails} />
     </div>
   )

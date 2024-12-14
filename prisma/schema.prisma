@@ -9,7 +9,7 @@ datasource db {
 model User {
   id        Int        @id @default(autoincrement())
   email     String     @unique
-  firstName String
+  firstName  String
   lastName  String 
   bookings  Booking[]  
   clerkId   String?     
@@ -25,13 +25,10 @@ model Bus {
   capacity  Int         
   routeId   Int        
   route     Route      @relation(fields: [routeId], references: [id] ,onDelete: Cascade)
-
-  seats     Seat[]   
-  bookings  Booking[]  
-
+  seats     Seat[]
+  bookings  Booking[]
   startingTime DateTime
   endingTime   DateTime
-  
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   price     Float
@@ -41,8 +38,7 @@ model Route {
   id         Int        @id @default(autoincrement())
   startPoint String
   endPoint   String
-  buses      Bus[] 
-
+  buses      Bus[]
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
 }
@@ -56,12 +52,10 @@ model Booking {
   seatsBooked Int
   user        User       @relation(fields: [userId], references: [id] ,onDelete: Cascade)
   bus         Bus        @relation(fields: [busId], references: [id] ,onDelete: Cascade)
-  paymentId  Int?
-  payment    Payment?   @relation(fields: [paymentId], references: [id] ,onDelete: Cascade)
-  
-  ticketCode String?
-  seatNumber Seat[]  
-
+  paymentId   Int?
+  payment     Payment?   @relation(fields: [paymentId], references: [id] ,onDelete: Cascade)
+  ticketCode  String?
+  seatNumber  Seat[]
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 }
@@ -82,17 +76,17 @@ model Payment {
 }
  
 model Seat {
-  id        Int    @id @default(autoincrement())
+  id         Int    @id @default(autoincrement())
   seatNumber String  
-  busId     Int?
-  bus       Bus?    @relation(fields: [busId], references: [id] ,onDelete: Cascade)
-  isBooked  Boolean @default(false) 
+  busId      Int?
+  bus        Bus?    @relation(fields: [busId], references: [id] ,onDelete: Cascade)
+  isBooked   Boolean @default(false) 
 
-  bookingId Int?
-  Booking  Booking? @relation(fields: [bookingId], references: [id] ,onDelete: Cascade)
+  bookingId  Int?
+  Booking    Booking? @relation(fields: [bookingId], references: [id] ,onDelete: Cascade)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 enum BookingStatus {
