@@ -1,6 +1,7 @@
 'use client';
 import { getUser, profileBooking } from '@/actions/user.actions'
 import { convertUTCToLocal } from '@/lib/utils'; 
+import { useUser } from '@clerk/nextjs';
 import { useEffect, useState } from 'react';
 import { FiLoader } from 'react-icons/fi';
 interface Props {
@@ -16,18 +17,21 @@ interface Props {
       busNumber: string;
       route: { startPoint: string ; endPoint: string; };
     }
-} 
-
+}
 const ProfilePage = () => {
 
+  let user = useUser();
+
+  const id = user?.user?.publicMetadata.userId;
+
+  const name = user.user?.firstName;  
+   
   const [bookings, setBookings] = useState<Props[]>([]);
   useEffect(()=>{
 
-    const bokfun = async()=>{  
-      const user = await getUser();
+    const bokfun = async()=>{
       if (!user) { return;}
-    
-        const bookings:Props[] = await profileBooking(user.id);
+        const bookings:Props[] = await profileBooking(id as number);
         setBookings(bookings) 
      }
       bokfun()
@@ -36,7 +40,7 @@ const ProfilePage = () => {
   return (
     <div> 
       <div className=' w-5/6 mx-auto mt-5'>
-          <p className=' text-center text-lg'>Wellcome , <span className=' font-bold textbase'>John Doe 👋🏻</span></p>
+       {name && <p className=' text-center text-lg'>Wellcome , <span className=' font-bold textbase'>{name} 👋🏻</span></p>}
          { bookings && <p>Your Tickets : {bookings.length}</p>}
         <div className='mt-8 flex max-md:justify-center items-center gap-7 flex-wrap overflow-hidden '>
         {
@@ -56,7 +60,6 @@ const ProfilePage = () => {
             <p className=' text-center text-lg '>No Bookings yet</p>
         }
         </div>
-
          {
             bookings.length === 0 && (  <div className='w-full h-96 flex items-center justify-center'>
               <FiLoader className=" text-2xl animate-spin" />

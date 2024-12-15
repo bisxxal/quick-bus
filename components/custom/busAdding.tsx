@@ -46,24 +46,24 @@ const BusAdding = ({bus , type}:{bus?:any , type:'update'|'create'}) => {
         setLoading(false)
     }
   return (
-    <div>
-      <form action={handleSubmit} className=" flex flex-col gap-2 w-full">
-        <label className=" text-gray-400 text-lg mt-2 -mb-2">Bus name</label>
-        <input required className="  w-[400px] placeholder:text-gray-500 border bg-[#3352cc23]  border-[#3352CC]  rounded-2xl  p-3 "  defaultValue={bus?.busName} type="text" placeholder="busname" name="busname" id="busname"/>
+    <div className=" w-[50%] max-md:w-[87%] mx-auto">
+      <form action={handleSubmit} className=" flex flex-col gap-2 !w-full">
+        <label className="w-full text-gray-400 text-lg mt-2 -mb-2">Bus name</label>
+        <input required className="   placeholder:text-gray-500 border bg-[#3352cc23]  border-[#3352CC]  rounded-2xl  p-3 "  defaultValue={bus?.busName} type="text" placeholder="busname" name="busname" id="busname"/>
         <label className=" text-gray-400 text-lg mt-2 -mb-2">Bus Number</label>
-        <input required className="  w-[400px] placeholder:text-gray-500 border bg-[#3352cc23]  border-[#3352CC]  rounded-2xl  p-3 " defaultValue={bus?.busNumber} type="text" placeholder="bus number" name="busnumber" />
+        <input required className="   placeholder:text-gray-500 border bg-[#3352cc23]  border-[#3352CC]  rounded-2xl  p-3 " defaultValue={bus?.busNumber} type="text" placeholder="bus number" name="busnumber" />
         <label className=" text-gray-400 text-lg mt-2 -mb-2">Bus Capacity</label>
-        <input required className="  w-[400px] placeholder:text-gray-500 border bg-[#3352cc23]  border-[#3352CC]  rounded-2xl  p-3 " defaultValue={bus?.capacity} type="number" placeholder="capacity" name="capacity" />
+        <input required className="   placeholder:text-gray-500 border bg-[#3352cc23]  border-[#3352CC]  rounded-2xl  p-3 " defaultValue={bus?.capacity} type="number" placeholder="capacity" name="capacity" />
         <label className=" text-gray-400 text-lg mt-2 -mb-2">Bus name</label>
-        <input required className="  w-[400px] placeholder:text-gray-500 border bg-[#3352cc23]  border-[#3352CC]  rounded-2xl  p-3 " defaultValue={bus?.price} type="number" placeholder="price" name="price" />
+        <input required className="   placeholder:text-gray-500 border bg-[#3352cc23]  border-[#3352CC]  rounded-2xl  p-3 " defaultValue={bus?.price} type="number" placeholder="price" name="price" />
         <label className=" text-gray-400 text-lg mt-2 -mb-2">Starting date</label>
         <input required className=" border border-[#3352CC]  rounded-2xl  p-3 bg-[#3352cc23]  " defaultValue={bus?.startingTime} type="date" name="startingTime" />
         <label className=" text-gray-400 text-lg mt-2 -mb-2">ending date</label>
         <input required className=" border border-[#3352CC]  rounded-2xl  p-3 bg-[#3352cc23] "  defaultValue={bus?.endingTime} type="date" name="endingTime" />
         <label className=" text-gray-400 text-lg mt-2 -mb-2">Starting point</label>
-        <input required className="  w-[400px] placeholder:text-gray-500 border bg-[#3352cc23]  border-[#3352CC]  rounded-2xl  p-3 " type="text"  defaultValue={bus?.route.startPoint}  placeholder="startpoint" name="startpoint" />
+        <input required className="   placeholder:text-gray-500 border bg-[#3352cc23]  border-[#3352CC]  rounded-2xl  p-3 " type="text"  defaultValue={bus?.route.startPoint}  placeholder="startpoint" name="startpoint" />
         <label className=" text-gray-400 text-lg mt-2 -mb-2">ending point</label>
-        <input required className="  w-[400px] ring-0 focus:ring-0 placeholder:text-gray-500 border bg-[#3352cc23]  border-[#3352CC]  rounded-2xl  p-3 " type="text"  defaultValue={bus?.route.endPoint} placeholder="endpoint" name="endpoint" />
+        <input required className="   ring-0 focus:ring-0 placeholder:text-gray-500 border bg-[#3352cc23]  border-[#3352CC]  rounded-2xl  p-3 " type="text"  defaultValue={bus?.route.endPoint} placeholder="endpoint" name="endpoint" />
         <button disabled={isLoading} className=" buttonbg mt-4 p-3  rounded-2xl flex items-center justify-center " type="submit">
           {isLoading ? <FiLoader className=" text-xl animate-spin" /> : type === 'create' ? 'Submit' : 'Update'}
         </button>

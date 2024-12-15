@@ -36,7 +36,7 @@ const AdminBusSearch = ({ handelSearchSumbit }: any) => {
     }
   
   return (
-    <div>
+    <div className=" w-1/2  max-md:w-5/6 mx-auto">
       <form action={handelSearchSumbit} className="border-2 border-[#2F4BB9] mt-3 rounded-full p-2 flex justify-between">
         <input
           required

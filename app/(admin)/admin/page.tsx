@@ -23,8 +23,8 @@ const AdminPage = () => {
     <div className=' bg-black text-white h-screen p-3 '>
       <h1 className='text-4xl font-bold text-center'>Admin Page / <span className=' bg-gradient-to-r  from-[#CC3BD4]  to-[#D064AC] bg-clip-text text-transparent'>Quick bus</span></h1>
          
-         <Link href='/admin/createbus' className='text-2xl buttonbg text-center mx-auto block w-[200px] py-3 mt-5'>Create Bus</Link>
-          <h1 className=' text-2xl font-semibold mt-4'>Update Bus details / scheudule</h1>
+         <Link href='/admin/createbus' className='text-2xl buttonbg text-center mb-7 mx-auto block w-[200px] py-3 mt-5'>Create Bus</Link>
+          <h1 className=' w-1/2 max-md:w-5/6 mx-auto text-2xl font-semibold my-7'>Update Bus details / scheudule</h1>
           <AdminBusSearch handelSearchSumbit={handelSearchSumbit} />
     </div>
   )
