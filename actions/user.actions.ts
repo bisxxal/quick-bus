@@ -49,13 +49,13 @@ export const createUser = async (user:any) => {
     }
   }
 
-export const profileBooking = async () => { 
+export const profileBooking = async (id:number) => { 
   try {
-    const user = await getUser();
-
+    // const user = await getUser();
+    // if (!user) {  return;}
     const bookings = await prisma.booking.findMany({
       where:{
-        userId:user.id
+        userId:id
       },
       select:{
         id:true,
@@ -85,6 +85,8 @@ export const profileBooking = async () => {
     })
     return JSON.parse(JSON.stringify(bookings))
   } catch (error) {
-    handelError (error , 'error when getting user')
+    handelError (error , 'profile error')
   }
-}
+} 
+
+ 

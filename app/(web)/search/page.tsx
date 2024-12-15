@@ -3,32 +3,21 @@ import { SearchBuses } from '@/actions/booking.actions'
 import { convertUTCToLocal } from '@/lib/utils'
 import { redirect,useSearchParams } from 'next/navigation'
 import { useEffect, useState , Suspense} from 'react'
-const SearchPage = () => {
-  // const [isClient, setIsClient] = useState(false)
-  //  useEffect(() => {
-  //   setIsClient(true)
-  // }, [])
-
-  // if (!isClient) { 
-  //   return <div>Loading...</div>
-  // }
-  const path = useSearchParams();
-  // if (path.isFallback) {
-  //   return <div>Loading...</div>
-  // }
-    const form = path.get('from') as string
-    const to = path.get('to') as string
-    const dateValue =    path.get('date') as string | null;
-    const date = dateValue ? new Date(dateValue) : new Date();
+import { FiLoader } from 'react-icons/fi'
+const SearchPage = () => { 
     const [buses, setBuses] = useState([])
     useEffect(()=>{
-        featchBusses()
-    } , [path])
-
-    const featchBusses = async () => {  
-      const bus = await SearchBuses(to, form, date) 
-      setBuses(bus.bus); 
-    }
+      const params = new URLSearchParams(window.location.search);
+      const form = params.get('from') || '';
+      const to = params.get('to') || ''; 
+      const dateValue =    params.get('date') as string | null;
+      const date = dateValue ? new Date(dateValue) : new Date();
+      const featchBusses = async () => { 
+        const bus = await SearchBuses(to, form, date) 
+        setBuses(bus.bus); 
+      }
+      featchBusses()
+    } , [])
     const handelClicked = (id:string) => {
       redirect(`/bus/${id}`)
     }
@@ -37,6 +26,12 @@ const SearchPage = () => {
     <div className=' flex items-center max-md:w-[94%] w-5/6 mx-auto gap-5 flex-col'>
       <h1 className='text-2xl font-semibold'>Search Result</h1>
       <p className='textbase font-semibold text-start'>{buses.length} bus found</p>
+
+      {
+       buses.length === 0 && (  <div className='w-full h-96 flex items-center justify-center'>
+          <FiLoader className=" text-xl animate-spin" />
+        </div>)
+      }
 
      {  buses.length >0 && <div className='w-full grid items-center max-md:grid-cols-5 justify-between grid-cols-6'>
          <p>Bus name</p>

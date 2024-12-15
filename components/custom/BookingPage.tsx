@@ -35,7 +35,7 @@ const BookingPage = ({busDetails ,user}:any) => {
           description: 'Payment for bus seat booking',
           order_id: response.id,
           handler: async (response: any) => { 
-            console.log('Payment response:', response);
+            setLoading(true);
             const razorpay_payment_id =  response.razorpay_payment_id;
             const razorpay_order_id  =   response.razorpay_order_id;
             const razorpay_signature =   response.razorpay_signature;
@@ -78,13 +78,11 @@ const BookingPage = ({busDetails ,user}:any) => {
         busId: id,
         seatIds: selectedSeatIds,
         paymentId: paymentid!,
-      }) 
-      // router.push(`/ticket/${result?.booking.id}`); 
-      setLoading(false);
-
-      setTimeout(() => {
-        // router.refresh();
-        router.push(`/ticket/${result?.booking.id}`); 
+      })  
+      router.push(`/ticket/${result?.booking.id}`); 
+      
+      setTimeout(() => { 
+        setLoading(false);
       }, 100); 
     }
   return (

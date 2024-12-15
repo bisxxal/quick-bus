@@ -128,3 +128,58 @@ export const SearchBus = async (busname:string) => {
         handelError(error , "SearchBus Error");
     }
 }
+
+export default async function getBusSuggetion( query:string) {
+  
+    if (!query || typeof query !== "string") {
+      return { message: "Query parameter is required" };
+         }
+
+    try {
+      const buses = await prisma.bus.findMany({
+        where: {
+          OR:[
+            {
+              busNumber: {
+                contains: query,     
+                mode: "insensitive"  
+              }
+            },
+            {
+              busName: {
+                contains: query,      
+                mode: "insensitive"   
+              }
+            }
+          ] 
+        },
+        select: {
+          busName: true,  
+          busNumber: true,
+          id:true
+        }
+      });
+  
+      return JSON.parse(JSON.stringify(buses));
+    } catch (error) { 
+      handelError (error , 'error when getting user');
+    }
+  }  
+ 
+
+  export const SearchBusId = async (id:number) => {
+    try {
+        const bus = await prisma.bus.findMany({
+            where: {
+                id
+            },
+            select:{
+                id:true,
+            }
+        }); 
+        return JSON.parse(JSON.stringify({bus:bus[0].id}));
+         
+    } catch (error) {
+        handelError(error , "SearchBus Error");
+    }
+}
