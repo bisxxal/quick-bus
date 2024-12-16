@@ -33,7 +33,7 @@ const SearchPage = () => {
         </div>)
       }
 
-     {  buses.length >0 && <div className='w-full grid items-center max-md:grid-cols-5 justify-between grid-cols-6'>
+     {  buses.length >0 && <div className='w-full max-md:text-xs grid items-center max-md:grid-cols-5 justify-between grid-cols-6'>
          <p>Bus name</p>
          <p>Departure</p>
          <p className=' max-md:hidden'>Arrive Time</p>
@@ -44,16 +44,16 @@ const SearchPage = () => {
           {
            buses && buses?.map((bus:any) => {             
                 return (
-                <div key={bus.buses[0].id} className=' border-2 bg-[#3352cc23]  border-[#3352ccbb]  max-md:grid-cols-5 rounded-3xl mb-2 h-32 items-center justify-center  px-4 grid grid-cols-6 w-full h-62  '>
+                <div key={bus.buses[0].id} className=' border-2 bg-[#3352cc23] max-md:text-xs  border-[#3352ccbb]  max-md:grid-cols-5 rounded-3xl mb-2 h-32 items-center justify-center  px-4 grid grid-cols-6 w-full h-62  '>
                     <div>
-                    <p className=' text-xl font-extrabold'>{bus.buses[0].busName}</p>
+                    <p className=' max-md:text-base line-clamp-1 text-xl font-extrabold'>{bus.buses[0].busName}</p>
                     <p className=' text-xs text-gray-400'>bus No - {bus.buses[0].busNumber}</p>
                     </div>
                     <p>{ convertUTCToLocal( bus.buses[0].startingTime)}</p>
                     <p className=' max-md:hidden' >{convertUTCToLocal(bus.buses[0].endingTime)}</p>
                     <h1>₹ {bus.buses[0].price}</h1>
                     <h1>{bus.buses[0]?.seats.length}</h1>
-                    <button onClick={()=>handelClicked(bus?.buses[0].id)} className=' bg-gradient-to-r from-indigo-500 text-white via-purple-500 to-pink-500 p-4 max-md:py-3 rounded-full text-lg font-semibold'>view seat</button>
+                    <button onClick={()=>handelClicked(bus?.buses[0].id)} className=' bg-gradient-to-r from-indigo-500 text-white via-purple-500 to-pink-500 p-4 max-md:p-3 max-md:py-3 rounded-full max-md:text-xs text-lg font-semibold'>view seat</button>
                     </div>
                 )
             })

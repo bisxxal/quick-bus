@@ -46,7 +46,7 @@ const BusAdding = ({bus , type}:{bus?:any , type:'update'|'create'}) => {
         setLoading(false)
     }
   return (
-    <div className=" w-[50%] max-md:w-[87%] mx-auto">
+    <div className=" w-[50%] max-md:w-[87%]  mx-auto">
       <form action={handleSubmit} className=" flex flex-col gap-2 !w-full">
         <label className="w-full text-gray-400 text-lg mt-2 -mb-2">Bus name</label>
         <input required className="   placeholder:text-gray-500 border bg-[#3352cc23]  border-[#3352CC]  rounded-2xl  p-3 "  defaultValue={bus?.busName} type="text" placeholder="busname" name="busname" id="busname"/>

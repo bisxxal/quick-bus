@@ -95,30 +95,30 @@ const BookingPage = ({busDetails ,user}:any) => {
       </div>}
 
       <div className=' flex items-center justify-between'>  
-    <h1 className=" text-gray-400">Click on an Available seat to proceed with your transaction.</h1>
+    <h1 className=" max-md:text-xs text-gray-400">Click on an Available seat to proceed with your transaction.</h1>
 
     <div className='text-sm gap-6 flex items-center'>
       <div>
       <label>Available</label>
-      <p className='bg-[#3cf23c5a] border-[#00ff0087] border w-20 h-14 !rounded-xl'></p>
+      <p className='bg-[#3cf23c5a] border-[#00ff0087] border max-md:w-14 max-lg:h-12 w-20 h-14 !rounded-xl'></p>
       </div>
 
       <div>
           <label>Unavailable</label>
-          <p className='  w-20 h-14 !rounded-xl bg-[#313131]'>
+          <p className=' max-md:w-14 max-lg:h-12 w-20 h-14 !rounded-xl bg-[#313131]'>
           </p>
       </div>
 
       </div>
     </div>
   
-    <div className="grid grid-cols-5 p-3 rounded-xl border-2 border-[#ffffff47] gap-2 mt-4">
+    <div className="grid grid-cols-5 p-3 grid-rows-3 gap-y-10 rounded-xl border-2 border-[#ffffff47] gap-2 mt-4">
       {busDetails?.availableSeats?.map((seat:any) => (
         <button
           key={seat.id}
           onClick={() => !seat.isBooked && handleSeatClick(seat.id)}
           disabled={seat?.isBooked}
-          className={` w-20 h-14 !rounded-xl ${
+          className={` w-20 h-14 max-md:w-14 max-lg:h-12 !rounded-xl ${
             seat.isBooked
               ? 'bg-[#313131] cursor-not-allowed'
               : selectedSeats.has(seat.id)
@@ -126,8 +126,8 @@ const BookingPage = ({busDetails ,user}:any) => {
               : 'bg-[#3cf23c60] border-[#00ff0087] border'
           }  group flex items-center justify-center`}
         >
-         <GiCarSeat className='  text-2xl  mirror' />
-          <span className='opacity-0 group-hover:opacity-100 transition-all font-bold' >  {seat?.seatNumber} </span>
+         <GiCarSeat className=' max-md:text-base  text-2xl  mirror' />
+          <span className='opacity-0 group-hover:opacity-100 max-md:opacity-100 max-md:text-xs transition-all font-bold' >  {seat?.seatNumber} </span>
         </button>
       ))}
     </div>
