@@ -10,7 +10,7 @@ const tenantKeys = {
 
 const isProtectedRoute = createRouteMatcher([
     '/ticket(.*)',
-    '/api/webhook(.*)',
+    // '/api/webhook(.*)',
     '/admin(.*)',
     '/profile(.*)',
 ])
