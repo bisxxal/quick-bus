@@ -5,31 +5,27 @@ import getBusSuggetion from "@/actions/admin.action";
 import { SearchBusId } from "@/actions/admin.action";
 import { redirect } from "next/navigation";
 import { FiLoader } from "react-icons/fi";
+import { QueryClient, useQuery } from "@tanstack/react-query";
 interface BusSuggestion {
     busName: string;
     busNumber: string;
     id:number;
 }
 const AdminBusSearch = ({ handelSearchSumbit }: any) => {
-  const [query, setQuery] = useState("");
-  const [suggestions, setSuggestions] = useState<BusSuggestion[]>([]); 
-  const [isLoading, setIsLoading] = useState(false); 
-  useEffect(() => {
-    const fetchSuggestions = async () => {
-      if (query.length > 1) {
-        setIsLoading(true);
-        const data = await getBusSuggetion(query);
-        setSuggestions(data); 
-        setIsLoading(false);
-      } else {
-        setSuggestions([]); 
-      }
-    };
-    const timeoutId = setTimeout(() => {
-      fetchSuggestions();
-    }, 300); 
-    return () => clearTimeout(timeoutId);
-  }, [query]); 
+  const [query, setQuery] = useState(""); 
+ 
+  const client = new QueryClient()
+  const { isPending, isLoading, data } = useQuery({
+    queryKey: ['fetchBus' ,client],
+    queryFn: () => getBusSuggetion(query),
+    enabled: !!query,
+    staleTime: 2000
+    
+  })
+
+  // console.log(data);
+  
+
    const handelsSearchSumbit = async(id:number) => { 
         const res = await SearchBusId(id ) 
        redirect('/admin/search/'+res.bus)
@@ -57,7 +53,7 @@ const AdminBusSearch = ({ handelSearchSumbit }: any) => {
           {isLoading ? (
           <FiLoader className=" text-2xl text-center mx-auto animate-spin" /> 
           ) : (
-            suggestions.map((suggestion, index) => (
+            data?.map((suggestion:BusSuggestion, index:number) => (
               <li key={index} onClick={()=>handelsSearchSumbit(suggestion.id)} className="p-2 cursor-pointer flex px-4 justify-between hover:bg-[#ffffff2d]">
                 {suggestion.busName}  <span>{suggestion.busNumber}</span>
               </li>

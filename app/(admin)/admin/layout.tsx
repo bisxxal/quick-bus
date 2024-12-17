@@ -1,3 +1,4 @@
+import ReactQueryProvider from "@/quary/QuaryClient";
 import { currentUser } from "@clerk/nextjs/server";
 import type { Metadata } from "next"; 
 import { redirect } from "next/navigation";
@@ -17,8 +18,10 @@ export default async function RootLayout({
     return  redirect('/');
   } 
   return (
-   <div >
+   <div>
+    <ReactQueryProvider>
      {children}
+    </ReactQueryProvider>
    </div>
   );
 }

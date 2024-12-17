@@ -1,7 +1,7 @@
 'use client'
 import { SearchBuses } from '@/actions/booking.actions'
 import { convertUTCToLocal } from '@/lib/utils'
-import { redirect,useSearchParams } from 'next/navigation'
+import { redirect } from 'next/navigation'
 import { useEffect, useState , Suspense} from 'react'
 import { FiLoader } from 'react-icons/fi'
 const SearchPage = () => { 

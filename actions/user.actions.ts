@@ -48,7 +48,7 @@ export const createUser = async (user:any) => {
     }
   }
 
-export const profileBooking = async (id:number) => { 
+export const profileBooking = async () => { 
   try {
     const user = await getUser();
     // if (!user) {  return;}
