@@ -14,7 +14,6 @@ export const createUser = async (user:any) => {
             lastName:user.last_name,
         }
       })
-      console.log(newUser);
       
       return JSON.parse(JSON.stringify(newUser))
     } catch (error) {
@@ -51,11 +50,11 @@ export const createUser = async (user:any) => {
 
 export const profileBooking = async (id:number) => { 
   try {
-    // const user = await getUser();
+    const user = await getUser();
     // if (!user) {  return;}
     const bookings = await prisma.booking.findMany({
       where:{
-        userId:id
+        userId:user.id
       },
       select:{
         id:true,
@@ -83,6 +82,9 @@ export const profileBooking = async (id:number) => {
         }
       }
     })
+    if (!bookings) {
+      return ;
+    }
     return JSON.parse(JSON.stringify(bookings))
   } catch (error) {
     handelError (error , 'profile error')

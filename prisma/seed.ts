@@ -78,8 +78,6 @@ async function main() {
   //     endingTime: new Date('2024-12-13T08:00:00Z'),
   //   },
   // });
-
-  // console.log('Buses created:', { bus1, bus2, bus3, bus4 });
  
   const seatsForBus1 = await prisma.seat.createMany({
     data: Array.from({ length: bus1.capacity }, (_, index) => ({

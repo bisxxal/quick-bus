@@ -19,29 +19,27 @@ interface Props {
     }
 }
 const ProfilePage = () => {
-
   let user = useUser();
-
   const id = user?.user?.publicMetadata.userId;
-
-  const name = user.user?.firstName;  
-   
+  const name = user.user?.firstName;
+  const [loading, setLoading] = useState(true);
   const [bookings, setBookings] = useState<Props[]>([]);
   useEffect(()=>{
-
+     setLoading(true)
     const bokfun = async()=>{
       if (!user) { return;}
         const bookings:Props[] = await profileBooking(id as number);
-        setBookings(bookings) 
+        setBookings(bookings)
+        setLoading(false)
      }
       bokfun()
   },[])
-   
   return (
     <div> 
       <div className=' w-5/6 mx-auto mt-5'>
-       {name && <p className=' text-center text-lg'>Wellcome , <span className=' font-bold textbase'>{name} 👋🏻</span></p>}
-         { bookings && <p>Your Tickets : {bookings.length}</p>}
+       { name && <p className=' text-center text-lg'>Wellcome , <span className=' font-bold textbase'>{name} 👋🏻</span></p>}
+         { bookings.length !== 0 && <p>Your Tickets : {bookings.length}</p>}
+         { bookings.length === 0  && !loading && <p className=' text-center mt-10 max-md:text-base text-xl font-semibold'>No tickets are booked</p>}
         <div className='mt-8 flex max-md:justify-center items-center gap-7 flex-wrap overflow-hidden '>
         {
            bookings ? bookings?.map((book:Props , index:number)=>{
@@ -61,7 +59,7 @@ const ProfilePage = () => {
         }
         </div>
          {
-            bookings.length === 0 && (  <div className='w-full h-96 flex items-center justify-center'>
+            loading && (  <div className='w-full h-96 flex items-center justify-center'>
               <FiLoader className=" text-2xl animate-spin" />
             </div>)
           }
@@ -69,7 +67,4 @@ const ProfilePage = () => {
     </div>
   )
 }
-
 export default ProfilePage
-
- 

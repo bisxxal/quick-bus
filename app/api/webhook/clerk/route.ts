@@ -55,10 +55,7 @@ export async function POST(req: Request) {
       first_name: first_name,
       last_name: last_name
     }
-
-    console.log('User data:', user);
-    
-
+ 
     const newUser = await createUser(user);
  
     if(newUser) {
@@ -70,9 +67,7 @@ export async function POST(req: Request) {
       })
     }
 
-    console.log('User created:', newUser);
     
-
     return NextResponse.json({ message: 'OK', user: newUser })
   }
 
