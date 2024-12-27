@@ -74,7 +74,7 @@ const BookingPage = ({busDetails ,user}:any) => {
       if (!busDetails || selectedSeats.size === 0) return; 
       const selectedSeatIds = Array.from(selectedSeats); 
         const result = await bookSeat({
-        userId:1,  
+        // userId:1,
         busId: id,
         seatIds: selectedSeatIds,
         paymentId: paymentid!,
@@ -137,10 +137,10 @@ const BookingPage = ({busDetails ,user}:any) => {
         <div className=' flex justify-between max-md:flex-col max-md:items-start max-md:gap-7 items-center mt-4'>
           <div>
         <p className=' text-lg text-gray-400'>Total seat {Array.from(selectedSeats).length}</p>
-        <p className='my-4 font-extrabold text-2xl '>Selected Seats - <span className=' textbase'>{Array.from(selectedSeats).join(', ')}</span> </p>
-        <p className='my-4 font-extrabold text-3xl '>Total Amount -  ₹ { busDetails.bus.price * selectedSeats.size } </p>
+        <p className='my-4 font-extrabold text-2xl max-md:text-xl '>Selected Seats - <span className=' textbase'>{Array.from(selectedSeats).join(', ')}</span> </p>
+        <p className='my-4 max-md:my-2 font-extrabold text-3xl max-md:text-2xl'>Total Amount -  ₹ { busDetails.bus.price * selectedSeats.size } </p>
           </div>
-        <button onClick={handleSubmit} className="  p-4 px-6 bg-gradient-to-r from-indigo-500 text-white via-purple-500 to-pink-500 text-xl font-extrabold rounded-full ">
+        <button onClick={handleSubmit} className="  p-4 px-6 max-md:px-4 max-md:p-3 max-md:text-sm bg-gradient-to-r from-indigo-500 text-white via-purple-500 to-pink-500 text-xl font-extrabold rounded-full ">
      Confirm Booking</button>
         </div>
        )

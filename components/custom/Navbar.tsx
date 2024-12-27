@@ -10,11 +10,11 @@ const Navbar = () => {
   const user = useUser();
   const router = useRouter();
   const role = user?.user?.publicMetadata?.role;
-  useEffect(() => { 
-    if(role === 'admin') {
-      router.push('/admin')
-    }
-  } , [user]);
+  // useEffect(() => { 
+  //   if(role === 'admin') {
+  //     router.push('/admin')
+  //   }
+  // } , [user]);
   return (
     <div className='px-10 max-md:px-5 w-full h-[60px] flex items-center border-b border-[#ffffff1b] fixed top-0 left-0 backdrop-blur-md justify-between'>
     <Link href={'/'} className='text-4xl max-md:text-2xl bg-gradient-to-r  from-[#CC3BD4]  to-[#D064AC]  font-bold  bg-clip-text flex  text-transparent items-center gap-3'>Quick Bus <FaBus className="text-3xl max-md:text-xl textbase " /> </Link>

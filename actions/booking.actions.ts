@@ -2,6 +2,7 @@
 import prisma from "@/lib/prisma";
 import { handelError } from "@/lib/utils/error"; 
 import { getUser } from "./user.actions"; 
+import { redis } from "@/lib/redis";
 
 export const fetchDirection = async () => {
   try { 
@@ -109,11 +110,12 @@ export async function getBusDetails(busId: number) {
     
     }
   } 
-export async function bookSeat({userId,busId,seatIds,paymentId,}: {userId: number;busId: number;seatIds: number[];paymentId: number;}) {
+export async function bookSeat({busId,seatIds,paymentId,}: {busId: number;seatIds: number[];paymentId: number;}) {
   try { 
+    const user = await getUser();
     const booking = await prisma.booking.create({
       data: {
-        userId: userId,
+        userId: user.id,
         busId: busId,
         bookingDate: new Date(),
         status: 'CONFIRMED',   
@@ -137,6 +139,9 @@ export async function bookSeat({userId,busId,seatIds,paymentId,}: {userId: numbe
         id: { in: seatIds },
       },
     }); 
+
+    console.log('updatedSeats', updatedSeats);
+    
     return {
       booking,
       seats: updatedSeats.map((seat) => ({

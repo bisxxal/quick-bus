@@ -1,6 +1,7 @@
 'use server';
 
 import prisma from "@/lib/prisma";
+import { redis } from "@/lib/redis";
 import { handelError } from "@/lib/utils/error";
 import { currentUser } from "@clerk/nextjs/server";
 
@@ -25,7 +26,6 @@ export const createUser = async (user:any) => {
  
     try {
       const use = await currentUser()
-  
       const user = await prisma.user.findUnique({
         where:{
           id:Number(use?.publicMetadata.userId)
@@ -51,7 +51,11 @@ export const createUser = async (user:any) => {
 export const profileBooking = async () => { 
   try {
     const user = await getUser();
-    // if (!user) {  return;}
+    const cachevalue = await redis.get(`booking:${user.id}`)
+    if (cachevalue) {
+      return JSON.parse(cachevalue)
+    }
+
     const bookings = await prisma.booking.findMany({
       where:{
         userId:user.id
@@ -82,13 +86,17 @@ export const profileBooking = async () => {
         }
       }
     })
+    console.log('not commed');
+    
     if (!bookings) {
       return ;
+    } 
+    if(!cachevalue){
+      await redis.set(`booking:${user.id}`, JSON.stringify(bookings) , 'EX', 6000)
     }
+    // await redis.set('booking', JSON.stringify(bookings) , 'EX', 60)
     return JSON.parse(JSON.stringify(bookings))
   } catch (error) {
     handelError (error , 'profile error')
   }
 } 
-
- 
