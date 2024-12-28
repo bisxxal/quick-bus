@@ -5,7 +5,21 @@ import { getUser } from "./user.actions";
 import { redis } from "@/lib/redis";
 
 export const fetchDirection = async () => {
-  try { 
+  try {
+    const chacheddata = await redis.get('direction');
+    if (chacheddata) {
+      const dirs:any = JSON.parse(chacheddata);
+      const uniquePoints = new Set();
+      const uniqueRoutes = dirs.filter((route: any) => {
+        const pointsKey = `${route.startPoint}-${route.endPoint}`;
+        if (!uniquePoints.has(pointsKey)) {
+          uniquePoints.add(pointsKey);
+          return true;  
+        }
+        return false;    
+      });  
+      return JSON.parse(JSON.stringify(uniqueRoutes));
+    }
       const dir = await prisma.route.findMany({
           select: {
               id: true,
@@ -23,6 +37,7 @@ export const fetchDirection = async () => {
           }
           return false;   
       });
+      await redis.set('direction', JSON.stringify(uniqueRoutes), 'EX', 6000);
       return JSON.parse(JSON.stringify(uniqueRoutes));
   } catch (error) {
       handelError(error, 'fetchDirection');

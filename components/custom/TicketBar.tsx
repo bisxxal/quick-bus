@@ -3,6 +3,8 @@ import { redirect } from 'next/navigation'
 
 const TicketBar = ({fetchDir}:any) => {
      
+  console.log(fetchDir);
+  
     const handelclicked = (e:any) => {  
     e.preventDefault()
     redirect(`/search?from=${e.target.from.value}&to=${e.target.to.value}&date=${e.target.date.value}`)
@@ -22,7 +24,7 @@ const TicketBar = ({fetchDir}:any) => {
       </select>
       <select required className='outline-none text-xl max-md:text-base max-md:py-4 font-semibold border-x-2 max-md:border-y-2 max-md:border-x-0 border-[#3352cc] black p-3 bg-transparent ' name="to"  >
       {
-            fetchDir.map((dir:any) => {
+            fetchDir?.map((dir:any) => {
                 return <option key={dir.id} value={dir.endPoint}>{dir.endPoint}</option>
             })
         }

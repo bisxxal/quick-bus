@@ -1,9 +1,7 @@
 'use server'
 import prisma from "@/lib/prisma";
-import { handelError } from "@/lib/utils/error"; 
-import { revalidatePath } from 'next/cache';
-import { redirect } from "next/navigation";
-import { NextResponse } from "next/server";
+import { redis } from "@/lib/redis";
+import { handelError } from "@/lib/utils/error";
 
 export const addBus = async (busName:string , busNumber: string, capacity: number ,  startingTime:Date ,endingTime:Date , price:number , startPoint:string , endPoint:string) => {
     try {
@@ -60,6 +58,11 @@ export const UpdateBus = async ( busId:number, routeId:number , busNumber: strin
 }
 export const featchBus = async (busId: number) => {
     try {
+         const cachevalue = await redis.get(`bus:${busId}`);
+            if (cachevalue) {
+              return JSON.parse(cachevalue)
+            }
+
         const bus = await prisma.bus.findUnique({
             where: {
                 id: busId
@@ -88,7 +91,8 @@ export const featchBus = async (busId: number) => {
                 }
             }
         });
-       
+        console.log('from db');
+        await redis.set(`bus:${bus?.id}`, JSON.stringify(bus) , 'EX', 6000)
         return JSON.parse(JSON.stringify(bus));
     } catch (error) {
         handelError(error , "featchBus Error");     
@@ -121,7 +125,7 @@ export const SearchBus = async (busname:string) => {
             select:{
                 id:true,
             }
-        }); 
+        });
         return JSON.parse(JSON.stringify({bus:bus[0].id}));
          
     } catch (error) {
